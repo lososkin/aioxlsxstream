@@ -1,7 +1,7 @@
 
 # aioxlsxstream
 
-Generate the xlsx file on fly without storing enire file in memory.
+Generate the xlsx file on fly without storing entire file in memory.
 Generated excel workbook contain only one sheet. All data writes as strings.
 
 ## Installation
