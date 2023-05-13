@@ -14,7 +14,7 @@ pip install aioxlsxstream
 
   * Python 3.8+
 
-### Simple exapmle
+### Simple example
 
 ```python
 import aioxlsxstream
