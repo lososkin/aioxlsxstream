@@ -52,9 +52,6 @@ async def rows_generaor():
         yield row_cells_generator(row)
 
 async def handle(request):
-    """
-        Example with file from disk
-    """
     filename = "example.xlsx"
     response = web.StreamResponse(
         status=200,
