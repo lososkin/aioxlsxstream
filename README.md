@@ -1,7 +1,7 @@
 
 # aioxlsxstream
 
-Generate the xlsx file prior to downloading or of a very large file that you do not want to store entirely on disk or on memory.
+Generate the xlsx file on fly without storing enire file in memory.
 Generated excel workbook contain only one sheet. All data writes as strings.
 
 ## Installation
