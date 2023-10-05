@@ -2,6 +2,7 @@ import os
 import asynczipstream
 import typing as t
 from dataclasses import dataclass
+from xml.sax.saxutils import escape
 
 TEMPLATE_DIR = f"{os.path.dirname(__file__)}/xlsx_template"
 
@@ -76,6 +77,7 @@ class XlsxFile:
             yield start_row_template.format(row=row_number).encode("utf-8")
             column_number = 0
             async for cell in row:
+                cell = escape(str(cell)) if cell is not None else ""
                 yield cell_template.format(
                     column=column_number_to_name(column_number),
                     row=row_number,
