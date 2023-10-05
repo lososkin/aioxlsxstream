@@ -1,1 +1,1 @@
-recursive-include aioxlsxstream *.xml *.rels
+recursive-include aioxlsxstream/xlsx_template *.xml *.rels

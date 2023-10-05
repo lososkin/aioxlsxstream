@@ -62,7 +62,7 @@ async def handle(request):
     )
     await response.prepare(request)
 
-    xlsx_file = aioxlsxstream.XlsxFile()
+    xlsx_file = aioxlsxstream.XlsxFile() # or CsvFile("csv") or CsvFile("tsv")
     xlsx_file.write_sheet(rows_generaor())
 
     async for data in xlsx_file:

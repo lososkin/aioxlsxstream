@@ -3,6 +3,9 @@ import asynczipstream
 import typing as t
 from dataclasses import dataclass
 from xml.sax.saxutils import escape
+import csv
+import io
+
 
 TEMPLATE_DIR = f"{os.path.dirname(__file__)}/xlsx_template"
 
@@ -38,13 +41,12 @@ def get_filepaths_in_dir(dirname):
 
 template_files: t.List[TemplateFile] = []
 for file_path in get_filepaths_in_dir(TEMPLATE_DIR):
-    if file_path[-4:] == ".xml" or file_path[-5:] == ".rels":
-        with open(file_path, "rb") as template_file:
-            template_files.append(
-                TemplateFile(
-                    filename=file_path[len(TEMPLATE_DIR) :], content=template_file.read()
-                )
-        )
+    with open(file_path, "rb") as template_file:
+        template_files.append(
+            TemplateFile(
+                filename=file_path[len(TEMPLATE_DIR) :], content=template_file.read()
+            )
+    )
 
 
 def column_number_to_name(n):
@@ -98,3 +100,25 @@ class XlsxFile:
             iterable=self.__sheet_data_generator(data),
             compress_type=asynczipstream.ZIP_STORED,
         )
+
+
+class CsvFile:
+    def __init__(self, export_type: t.Literal["csv", "tsv"]):
+        csv_dialect = {"csv": csv.excel, "tsv": csv.excel_tab}[export_type]
+        self._csvfile_buffer = io.StringIO()
+        self._csv_writer = csv.writer(self._csvfile_buffer, dialect=csv_dialect)
+
+    async def __aiter__(self):
+        async for row_generator in self._data:
+            row = []
+            async for value in row_generator:
+                row.append(value)
+            self._csvfile_buffer.seek(0)
+            written_bytes_count = self._csv_writer.writerow(row)
+            self._csvfile_buffer.seek(0)
+            csv_row = self._csvfile_buffer.read(written_bytes_count).encode("utf-8")
+            yield csv_row
+
+    def write_sheet(self, rows_data):
+        self._data = rows_data
+
